@@ -113,7 +113,7 @@ with gr.Blocks(
                 "Rallio67/joi2_20B_instruct_alpha",
                 "google/flan-t5-xxl",
                 "google/flan-ul2",
-                "bigscience/bloom",
+                # "bigscience/bloom",
                 "bigscience/bloomz",
                 "EleutherAI/gpt-neox-20b",
             ],
