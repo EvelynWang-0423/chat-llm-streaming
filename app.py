@@ -72,15 +72,13 @@ def predict(
         if partial_words.endswith(assistant_name.rstrip()):
             partial_words = partial_words.rstrip(assistant_name.rstrip())
 
-        partial_words = partial_words.strip()
-
         if i == 0:
             history.append(" " + partial_words)
         else:
             history[-1] = partial_words
 
         chat = [
-            (history[i], history[i + 1]) for i in range(0, len(history) - 1, 2)
+            (history[i].strip(), history[i + 1].strip()) for i in range(0, len(history) - 1, 2)
         ]
         yield chat, history
 
