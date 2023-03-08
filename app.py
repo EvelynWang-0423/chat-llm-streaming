@@ -196,4 +196,4 @@ with gr.Blocks(
     inputs.submit(reset_textbox, [], [inputs])
 
     gr.Markdown(description)
-    demo.queue().launch(debug=True)
+    demo.queue(concurrency_count=16).launch(debug=True)
