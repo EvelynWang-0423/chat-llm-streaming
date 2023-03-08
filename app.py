@@ -6,13 +6,13 @@ from text_generation import Client, InferenceAPIClient
 
 
 def get_client(model: str):
-    if model == "Rallio67/joi_20B_instruct_alpha":
+    if model == "Rallio67/joi2_20B_instruct_alpha":
         return Client(os.getenv("API_URL"))
     return InferenceAPIClient(model, token=os.getenv("HF_TOKEN", None))
 
 
 def get_usernames(model: str):
-    if model == "Rallio67/joi_20B_instruct_alpha":
+    if model == "Rallio67/joi2_20B_instruct_alpha":
         return "User: ", "Joi: "
     return "User: ", "Assistant: "
 
@@ -48,7 +48,8 @@ def predict(
         inputs = user_name + inputs
 
     total_inputs = "".join(past) + inputs + "\n\n" + assistant_name
-    print(total_inputs)
+    # truncate total_inputs
+    total_inputs = total_inputs[-1000:]
 
     partial_words = ""
 
@@ -59,8 +60,8 @@ def predict(
             repetition_penalty=repetition_penalty,
             watermark=watermark,
             temperature=temperature,
-            max_new_tokens=1000,
-            stop_sequences=["User:"],
+            max_new_tokens=500,
+            stop_sequences=[user_name.rstrip()],
     )):
         if response.token.special:
             continue
@@ -105,9 +106,9 @@ with gr.Blocks(
     gr.HTML(title)
     with gr.Column(elem_id="col_container"):
         model = gr.Radio(
-            value="Rallio67/joi_20B_instruct_alpha",
+            value="Rallio67/joi2_20B_instruct_alpha",
             choices=[
-                "Rallio67/joi_20B_instruct_alpha",
+                "Rallio67/joi2_20B_instruct_alpha",
                 "google/flan-t5-xxl",
                 "google/flan-ul2",
                 "bigscience/bloom",
