@@ -72,6 +72,8 @@ def predict(
         if partial_words.endswith(assistant_name.rstrip()):
             partial_words = partial_words.rstrip(assistant_name.rstrip())
 
+        partial_words = partial_words.strip()
+
         if i == 0:
             history.append(" " + partial_words)
         else:
