@@ -48,15 +48,14 @@ def predict(
         inputs = user_name + inputs
 
     total_inputs = "".join(past) + inputs + "\n\n" + assistant_name
-    # truncate total_inputs
-    total_inputs = total_inputs[-1000:]
 
     partial_words = ""
 
     for i, response in enumerate(client.generate_stream(
             total_inputs,
-            top_p=top_p,
+            top_p=top_p if top_p < 1.0 else None,
             top_k=top_k,
+            truncate=1000,
             repetition_penalty=repetition_penalty,
             watermark=watermark,
             temperature=temperature,
