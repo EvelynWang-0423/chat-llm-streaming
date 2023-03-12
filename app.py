@@ -7,13 +7,17 @@ from text_generation import Client, InferenceAPIClient
 
 def get_client(model: str):
     if model == "Rallio67/joi2_20B_instruct_alpha":
-        return Client(os.getenv("API_URL"))
+        return Client(os.getenv("JOI_API_URL"))
+    if model == "togethercomputer/GPT-NeoXT-Chat-Base-20B":
+        return Client(os.getenv("OPENCHAT_API_URL"))
     return InferenceAPIClient(model, token=os.getenv("HF_TOKEN", None))
 
 
 def get_usernames(model: str):
     if model == "Rallio67/joi2_20B_instruct_alpha":
         return "User: ", "Joi: "
+    if model == "togethercomputer/GPT-NeoXT-Chat-Base-20B":
+        return "<user>: ", "<bot>: "
     return "User: ", "Assistant: "
 
 
@@ -109,6 +113,7 @@ with gr.Blocks(
         model = gr.Radio(
             value="Rallio67/joi2_20B_instruct_alpha",
             choices=[
+                "togethercomputer/GPT-NeoXT-Chat-Base-20B",
                 "Rallio67/joi2_20B_instruct_alpha",
                 "google/flan-t5-xxl",
                 "google/flan-ul2",
