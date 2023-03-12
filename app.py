@@ -114,7 +114,7 @@ with gr.Blocks(
             value="Rallio67/joi2_20B_instruct_alpha",
             choices=[
                 "Rallio67/joi2_20B_instruct_alpha",
-                "togethercomputer/GPT-NeoXT-Chat-Base-20B",
+                # "togethercomputer/GPT-NeoXT-Chat-Base-20B",
                 "google/flan-t5-xxl",
                 "google/flan-ul2",
                 "bigscience/bloom",
