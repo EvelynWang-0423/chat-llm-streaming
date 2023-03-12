@@ -113,11 +113,11 @@ with gr.Blocks(
         model = gr.Radio(
             value="Rallio67/joi2_20B_instruct_alpha",
             choices=[
-                "togethercomputer/GPT-NeoXT-Chat-Base-20B",
                 "Rallio67/joi2_20B_instruct_alpha",
+                "togethercomputer/GPT-NeoXT-Chat-Base-20B",
                 "google/flan-t5-xxl",
                 "google/flan-ul2",
-                # "bigscience/bloom",
+                "bigscience/bloom",
                 "bigscience/bloomz",
                 "EleutherAI/gpt-neox-20b",
             ],
