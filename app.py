@@ -17,7 +17,7 @@ def get_usernames(model: str):
     if model == "Rallio67/joi2_20B_instruct_alpha":
         return "User: ", "Joi: "
     if model == "togethercomputer/GPT-NeoXT-Chat-Base-20B":
-        return "<user>: ", "<bot>: "
+        return "<human>: ", "<bot>: "
     return "User: ", "Assistant: "
 
 
