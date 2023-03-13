@@ -25,6 +25,8 @@ def get_usernames(model: str):
     Returns:
         (str, str, str, str): pre-prompt, username, bot name, separator
     """
+    if model == "OpenAssistant/oasst-sft-1-pythia-12b":
+        return "", "<|prompter|", "<|assistant|>", "<|endoftext|>"
     if model == "Rallio67/joi2_20B_instruct_alpha":
         return "", "User: ", "Joi: ", "\n\n"
     if model == "togethercomputer/GPT-NeoXT-Chat-Base-20B":
@@ -35,6 +37,7 @@ def get_usernames(model: str):
 def predict(
     model: str,
     inputs: str,
+    typical_p: float,
     top_p: float,
     temperature: float,
     top_k: int,
@@ -66,8 +69,16 @@ def predict(
 
     partial_words = ""
 
-    for i, response in enumerate(
-        client.generate_stream(
+    if model == "OpenAssistant/oasst-sft-1-pythia-12b":
+        iterator = client.generate_stream(
+            total_inputs,
+            typical_p=typical_p,
+            repetition_penalty=repetition_penalty,
+            watermark=watermark,
+            max_new_tokens=500,
+        )
+    else:
+        iterator = client.generate_stream(
             total_inputs,
             top_p=top_p if top_p < 1.0 else None,
             top_k=top_k,
@@ -78,7 +89,8 @@ def predict(
             max_new_tokens=500,
             stop_sequences=[user_name.rstrip(), assistant_name.rstrip()],
         )
-    ):
+
+    for i, response in enumerate(iterator):
         if response.token.special:
             continue
 
@@ -105,23 +117,46 @@ def reset_textbox():
 
 
 def radio_on_change(
-    value: str, disclaimer, top_p, top_k, temperature, repetition_penalty, watermark
+    value: str,
+    disclaimer,
+    typical_p,
+    top_p,
+    top_k,
+    temperature,
+    repetition_penalty,
+    watermark,
 ):
-    if value == "togethercomputer/GPT-NeoXT-Chat-Base-20B":
-        top_p = top_p.update(value=0.25)
-        top_k = top_k.update(value=50)
-        temperature = temperature.update(value=0.6)
-        repetition_penalty = repetition_penalty.update(value=1.01)
+    if value == "OpenAssistant/oasst-sft-1-pythia-12b":
+        typical_p = typical_p.update(value=0.2, visible=True)
+        top_p = top_p.update(visible=False)
+        top_k = top_k.update(visible=False)
+        temperature = temperature.update(visible=False)
+        disclaimer = disclaimer.update(visible=False)
+    elif value == "togethercomputer/GPT-NeoXT-Chat-Base-20B":
+        typical_p = typical_p.update(visible=False)
+        top_p = top_p.update(value=0.25, visible=True)
+        top_k = top_k.update(value=50, visible=True)
+        temperature = temperature.update(value=0.6, visible=True)
+        repetition_penalty = repetition_penalty.update(value=1.01, visible=True)
         watermark = watermark.update(False)
         disclaimer = disclaimer.update(visible=True)
     else:
-        top_p = top_p.update(value=0.95)
-        top_k = top_k.update(value=4)
-        temperature = temperature.update(value=0.5)
+        typical_p = typical_p.update(visible=False)
+        top_p = top_p.update(value=0.95, visible=True)
+        top_k = top_k.update(value=4, visible=True)
+        temperature = temperature.update(value=0.5, visible=True)
         repetition_penalty = repetition_penalty.update(value=1.03)
         watermark = watermark.update(True)
         disclaimer = disclaimer.update(visible=False)
-    return disclaimer, top_p, top_k, temperature, repetition_penalty, watermark
+    return (
+        disclaimer,
+        typical_p,
+        top_p,
+        top_k,
+        temperature,
+        repetition_penalty,
+        watermark,
+    )
 
 
 title = """<h1 align="center">🔥Large Language Model API 🚀Streaming🚀</h1>"""
@@ -149,8 +184,9 @@ with gr.Blocks(
     gr.HTML(title)
     with gr.Column(elem_id="col_container"):
         model = gr.Radio(
-            value="togethercomputer/GPT-NeoXT-Chat-Base-20B",
+            value="OpenAssistant/oasst-sft-1-pythia-12b",
             choices=[
+                "OpenAssistant/oasst-sft-1-pythia-12b",
                 "togethercomputer/GPT-NeoXT-Chat-Base-20B",
                 "Rallio67/joi2_20B_instruct_alpha",
                 "google/flan-t5-xxl",
@@ -167,11 +203,19 @@ with gr.Blocks(
         inputs = gr.Textbox(
             placeholder="Hi there!", label="Type an input and press Enter"
         )
-        disclaimer = gr.Markdown(openchat_disclaimer)
+        disclaimer = gr.Markdown(openchat_disclaimer, visible=False)
         state = gr.State([])
         b1 = gr.Button()
 
         with gr.Accordion("Parameters", open=False):
+            typical_p = gr.Slider(
+                minimum=-0,
+                maximum=1.0,
+                value=0.2,
+                step=0.05,
+                interactive=True,
+                label="Typical P mass",
+            )
             top_p = gr.Slider(
                 minimum=-0,
                 maximum=1.0,
@@ -179,6 +223,7 @@ with gr.Blocks(
                 step=0.05,
                 interactive=True,
                 label="Top-p (nucleus sampling)",
+                visible=False,
             )
             temperature = gr.Slider(
                 minimum=-0,
@@ -187,6 +232,7 @@ with gr.Blocks(
                 step=0.1,
                 interactive=True,
                 label="Temperature",
+                visible=False,
             )
             top_k = gr.Slider(
                 minimum=1,
@@ -195,6 +241,7 @@ with gr.Blocks(
                 step=1,
                 interactive=True,
                 label="Top-k",
+                visible=False,
             )
             repetition_penalty = gr.Slider(
                 minimum=0.1,
@@ -204,14 +251,29 @@ with gr.Blocks(
                 interactive=True,
                 label="Repetition Penalty",
             )
-            watermark = gr.Checkbox(value=False, label="Text watermarking")
+            watermark = gr.Checkbox(value=True, label="Text watermarking")
 
     model.change(
         lambda value: radio_on_change(
-            value, disclaimer, top_p, top_k, temperature, repetition_penalty, watermark
+            value,
+            disclaimer,
+            typical_p,
+            top_p,
+            top_k,
+            temperature,
+            repetition_penalty,
+            watermark,
         ),
         inputs=model,
-        outputs=[disclaimer, top_p, top_k, temperature, repetition_penalty, watermark],
+        outputs=[
+            disclaimer,
+            typical_p,
+            top_p,
+            top_k,
+            temperature,
+            repetition_penalty,
+            watermark,
+        ],
     )
 
     inputs.submit(
@@ -219,6 +281,7 @@ with gr.Blocks(
         [
             model,
             inputs,
+            typical_p,
             top_p,
             temperature,
             top_k,
@@ -234,6 +297,7 @@ with gr.Blocks(
         [
             model,
             inputs,
+            typical_p,
             top_p,
             temperature,
             top_k,
