@@ -73,7 +73,6 @@ def predict(
         iterator = client.generate_stream(
             total_inputs,
             typical_p=typical_p,
-            repetition_penalty=repetition_penalty,
             watermark=watermark,
             max_new_tokens=500,
         )
@@ -132,7 +131,7 @@ def radio_on_change(
         top_k = top_k.update(visible=False)
         temperature = temperature.update(visible=False)
         disclaimer = disclaimer.update(visible=False)
-        repetition_penalty = repetition_penalty.update(value=1.03, visible=True)
+        repetition_penalty = repetition_penalty.update(visible=False)
         watermark = watermark.update(False)
     elif value == "togethercomputer/GPT-NeoXT-Chat-Base-20B":
         typical_p = typical_p.update(visible=False)
@@ -147,7 +146,7 @@ def radio_on_change(
         top_p = top_p.update(value=0.95, visible=True)
         top_k = top_k.update(value=4, visible=True)
         temperature = temperature.update(value=0.5, visible=True)
-        repetition_penalty = repetition_penalty.update(value=1.03)
+        repetition_penalty = repetition_penalty.update(value=1.03, visible=True)
         watermark = watermark.update(True)
         disclaimer = disclaimer.update(visible=False)
     return (
@@ -252,6 +251,7 @@ with gr.Blocks(
                 step=0.01,
                 interactive=True,
                 label="Repetition Penalty",
+                visible=False,
             )
             watermark = gr.Checkbox(value=False, label="Text watermarking")
 
