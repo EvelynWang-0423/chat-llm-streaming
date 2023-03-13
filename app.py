@@ -28,7 +28,7 @@ def get_usernames(model: str):
     if model == "OpenAssistant/oasst-sft-1-pythia-12b":
         return "", "<|prompter|", "<|assistant|>", "<|endoftext|>"
     if model == "Rallio67/joi2_20B_instruct_alpha":
-        return "", "User: ", "Joi: ", "\n\n"
+        return "", "User: ", "Joi2: ", "\n\n"
     if model == "togethercomputer/GPT-NeoXT-Chat-Base-20B":
         return openchat_preprompt, "<human>: ", "<bot>: ", "\n"
     return "", "User: ", "Assistant: ", "\n"
