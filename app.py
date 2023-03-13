@@ -185,9 +185,9 @@ with gr.Blocks(
     gr.HTML(title)
     with gr.Column(elem_id="col_container"):
         model = gr.Radio(
-            value="OpenAssistant/oasst-sft-1-pythia-12b",
+            value="Rallio67/joi2_20B_instruct_alpha",
             choices=[
-                "OpenAssistant/oasst-sft-1-pythia-12b",
+                # "OpenAssistant/oasst-sft-1-pythia-12b",
                 # "togethercomputer/GPT-NeoXT-Chat-Base-20B",
                 "Rallio67/joi2_20B_instruct_alpha",
                 "google/flan-t5-xxl",
@@ -216,33 +216,34 @@ with gr.Blocks(
                 step=0.05,
                 interactive=True,
                 label="Typical P mass",
+                visible=False
             )
             top_p = gr.Slider(
                 minimum=-0,
                 maximum=1.0,
-                value=0.25,
+                value=0.95,
                 step=0.05,
                 interactive=True,
                 label="Top-p (nucleus sampling)",
-                visible=False,
+                visible=True,
             )
             temperature = gr.Slider(
                 minimum=-0,
                 maximum=5.0,
-                value=0.6,
+                value=0.5,
                 step=0.1,
                 interactive=True,
                 label="Temperature",
-                visible=False,
+                visible=True,
             )
             top_k = gr.Slider(
                 minimum=1,
                 maximum=50,
-                value=50,
+                value=4,
                 step=1,
                 interactive=True,
                 label="Top-k",
-                visible=False,
+                visible=True,
             )
             repetition_penalty = gr.Slider(
                 minimum=0.1,
@@ -251,9 +252,9 @@ with gr.Blocks(
                 step=0.01,
                 interactive=True,
                 label="Repetition Penalty",
-                visible=False,
+                visible=True,
             )
-            watermark = gr.Checkbox(value=False, label="Text watermarking")
+            watermark = gr.Checkbox(value=True, label="Text watermarking")
 
     model.change(
         lambda value: radio_on_change(
