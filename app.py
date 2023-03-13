@@ -188,7 +188,7 @@ with gr.Blocks(
             value="OpenAssistant/oasst-sft-1-pythia-12b",
             choices=[
                 "OpenAssistant/oasst-sft-1-pythia-12b",
-                "togethercomputer/GPT-NeoXT-Chat-Base-20B",
+                # "togethercomputer/GPT-NeoXT-Chat-Base-20B",
                 "Rallio67/joi2_20B_instruct_alpha",
                 "google/flan-t5-xxl",
                 "google/flan-ul2",
