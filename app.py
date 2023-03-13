@@ -72,7 +72,7 @@ def predict(
     if model == "OpenAssistant/oasst-sft-1-pythia-12b":
         iterator = client.generate_stream(
             total_inputs,
-            # typical_p=typical_p,
+            typical_p=typical_p,
             watermark=watermark,
             max_new_tokens=500,
         )
