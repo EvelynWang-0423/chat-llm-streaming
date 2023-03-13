@@ -90,7 +90,7 @@ def predict(
 
         if i == 0:
             history.append(" " + partial_words)
-        else:
+        elif response.token.text not in user_name:
             history[-1] = partial_words
 
         chat = [
