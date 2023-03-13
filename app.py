@@ -132,6 +132,8 @@ def radio_on_change(
         top_k = top_k.update(visible=False)
         temperature = temperature.update(visible=False)
         disclaimer = disclaimer.update(visible=False)
+        repetition_penalty = repetition_penalty.update(value=1.03, visible=True)
+        watermark = watermark.update(False)
     elif value == "togethercomputer/GPT-NeoXT-Chat-Base-20B":
         typical_p = typical_p.update(visible=False)
         top_p = top_p.update(value=0.25, visible=True)
@@ -246,12 +248,12 @@ with gr.Blocks(
             repetition_penalty = gr.Slider(
                 minimum=0.1,
                 maximum=3.0,
-                value=1.01,
+                value=1.03,
                 step=0.01,
                 interactive=True,
                 label="Repetition Penalty",
             )
-            watermark = gr.Checkbox(value=True, label="Text watermarking")
+            watermark = gr.Checkbox(value=False, label="Text watermarking")
 
     model.change(
         lambda value: radio_on_change(
