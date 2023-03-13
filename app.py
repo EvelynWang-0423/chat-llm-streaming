@@ -105,7 +105,7 @@ In this app, you can explore the outputs of multiple LLMs when prompted in this 
 """
 
 with gr.Blocks(
-        css="""#col_container {width: 1000px; margin-left: auto; margin-right: auto;}
+        css="""#col_container {margin-left: auto; margin-right: auto;}
                 #chatbot {height: 520px; overflow: auto;}"""
 ) as demo:
     gr.HTML(title)
