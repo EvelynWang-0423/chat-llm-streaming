@@ -73,6 +73,7 @@ def predict(
         iterator = client.generate_stream(
             total_inputs,
             typical_p=typical_p,
+            truncate=1000,
             watermark=watermark,
             max_new_tokens=500,
         )
