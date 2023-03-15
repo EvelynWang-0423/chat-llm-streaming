@@ -26,7 +26,7 @@ def get_usernames(model: str):
         (str, str, str, str): pre-prompt, username, bot name, separator
     """
     if model == "OpenAssistant/oasst-sft-1-pythia-12b":
-        return "", "<|prompter|", "<|assistant|>", "<|endoftext|>"
+        return "", "<|prompter|>", "<|assistant|>", "<|endoftext|>"
     if model == "Rallio67/joi2_20Be_instruct_alpha":
         return "", "User: ", "Joi: ", "\n\n"
     if model == "togethercomputer/GPT-NeoXT-Chat-Base-20B":
