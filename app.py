@@ -13,7 +13,7 @@ openchat_preprompt = (
 
 
 def get_client(model: str):
-    if model == "Rallio67/joi2_20B_instruct_alpha":
+    if model == "Rallio67/joi2_20Be_instruct_alpha":
         return Client(os.getenv("JOI_API_URL"))
     if model == "togethercomputer/GPT-NeoXT-Chat-Base-20B":
         return Client(os.getenv("OPENCHAT_API_URL"))
@@ -27,8 +27,8 @@ def get_usernames(model: str):
     """
     if model == "OpenAssistant/oasst-sft-1-pythia-12b":
         return "", "<|prompter|", "<|assistant|>", "<|endoftext|>"
-    if model == "Rallio67/joi2_20B_instruct_alpha":
-        return "", "User: ", "Joi2: ", "\n\n"
+    if model == "Rallio67/joi2_20Be_instruct_alpha":
+        return "", "User: ", "Joi: ", "\n\n"
     if model == "togethercomputer/GPT-NeoXT-Chat-Base-20B":
         return openchat_preprompt, "<human>: ", "<bot>: ", "\n"
     return "", "User: ", "Assistant: ", "\n"
@@ -185,11 +185,11 @@ with gr.Blocks(
     gr.HTML(title)
     with gr.Column(elem_id="col_container"):
         model = gr.Radio(
-            value="Rallio67/joi2_20B_instruct_alpha",
+            value="OpenAssistant/oasst-sft-1-pythia-12b",
             choices=[
-                # "OpenAssistant/oasst-sft-1-pythia-12b",
+                "OpenAssistant/oasst-sft-1-pythia-12b",
                 # "togethercomputer/GPT-NeoXT-Chat-Base-20B",
-                "Rallio67/joi2_20B_instruct_alpha",
+                "Rallio67/joi2_20Be_instruct_alpha",
                 "google/flan-t5-xxl",
                 "google/flan-ul2",
                 "bigscience/bloom",
@@ -216,34 +216,33 @@ with gr.Blocks(
                 step=0.05,
                 interactive=True,
                 label="Typical P mass",
-                visible=False
             )
             top_p = gr.Slider(
                 minimum=-0,
                 maximum=1.0,
-                value=0.95,
+                value=0.25,
                 step=0.05,
                 interactive=True,
                 label="Top-p (nucleus sampling)",
-                visible=True,
+                visible=False,
             )
             temperature = gr.Slider(
                 minimum=-0,
                 maximum=5.0,
-                value=0.5,
+                value=0.6,
                 step=0.1,
                 interactive=True,
                 label="Temperature",
-                visible=True,
+                visible=False,
             )
             top_k = gr.Slider(
                 minimum=1,
                 maximum=50,
-                value=4,
+                value=50,
                 step=1,
                 interactive=True,
                 label="Top-k",
-                visible=True,
+                visible=False,
             )
             repetition_penalty = gr.Slider(
                 minimum=0.1,
@@ -252,9 +251,9 @@ with gr.Blocks(
                 step=0.01,
                 interactive=True,
                 label="Repetition Penalty",
-                visible=True,
+                visible=False,
             )
-            watermark = gr.Checkbox(value=True, label="Text watermarking")
+            watermark = gr.Checkbox(value=False, label="Text watermarking")
 
     model.change(
         lambda value: radio_on_change(
