@@ -13,8 +13,6 @@ openchat_preprompt = (
 
 
 def get_client(model: str):
-    if model == "Rallio67/joi2_20Be_instruct_alpha":
-        return Client(os.getenv("JOI_API_URL"))
     if model == "togethercomputer/GPT-NeoXT-Chat-Base-20B":
         return Client(os.getenv("OPENCHAT_API_URL"))
     return InferenceAPIClient(model, token=os.getenv("HF_TOKEN", None))
@@ -27,8 +25,6 @@ def get_usernames(model: str):
     """
     if model == "OpenAssistant/oasst-sft-1-pythia-12b":
         return "", "<|prompter|>", "<|assistant|>", "<|endoftext|>"
-    if model == "Rallio67/joi2_20Be_instruct_alpha":
-        return "", "User: ", "Joi: ", "\n\n"
     if model == "togethercomputer/GPT-NeoXT-Chat-Base-20B":
         return openchat_preprompt, "<human>: ", "<bot>: ", "\n"
     return "", "User: ", "Assistant: ", "\n"
@@ -190,7 +186,6 @@ with gr.Blocks(
             choices=[
                 "OpenAssistant/oasst-sft-1-pythia-12b",
                 # "togethercomputer/GPT-NeoXT-Chat-Base-20B",
-                "Rallio67/joi2_20Be_instruct_alpha",
                 "google/flan-t5-xxl",
                 "google/flan-ul2",
                 "bigscience/bloom",
