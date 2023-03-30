@@ -157,7 +157,7 @@ def radio_on_change(
     )
 
 
-title = """<h1 align="center">🔥Large Language Model API 🚀Streaming🚀</h1>"""
+title = """<h1 align="center">Large Language Model Chat API</h1>"""
 description = """Language models can be conditioned to act like dialogue agents through a conversational prompt that typically takes the form:
 
 ```
@@ -171,6 +171,10 @@ Assistant: <utterance>
 In this app, you can explore the outputs of multiple LLMs when prompted in this way.
 """
 
+text_generation_inference = """
+<div align="center">Powered by: <a href=https://github.com/huggingface/text-generation-inference>Text Generation Inference</a></div>
+"""
+
 openchat_disclaimer = """
 <div align="center">Checkout the official <a href=https://huggingface.co/spaces/togethercomputer/OpenChatKit>OpenChatKit feedback app</a> for the full experience.</div>
 """
@@ -180,6 +184,7 @@ with gr.Blocks(
                 #chatbot {height: 520px; overflow: auto;}"""
 ) as demo:
     gr.HTML(title)
+    gr.Markdown(text_generation_inference, visible=True)
     with gr.Column(elem_id="col_container"):
         model = gr.Radio(
             value="OpenAssistant/oasst-sft-1-pythia-12b",
